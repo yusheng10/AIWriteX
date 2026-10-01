@@ -1,0 +1,26 @@
+services:
+  aiwritex:
+    build: .
+    container_name: aiwritex
+    ports:
+      - "8000:8000"
+    volumes:
+      # 文章输出
+      - ./data/output:/app/output
+      # 运行日志
+      - ./data/logs:/app/logs
+      # 知识库 / 模板
+      - ./data/knowledge:/app/knowledge
+      # 配置文件（config.yaml / aiforge.toml 等），首次启动后可通过 Web 界面配置
+      - ./data/config:/app/src/ai_write_x/config
+    environment:
+      # 如需通过环境变量直接注入大模型 Key，可在这里加
+      # OPENAI_API_KEY: ""
+      TZ: Asia/Shanghai
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3

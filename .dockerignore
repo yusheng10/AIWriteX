@@ -1,0 +1,13 @@
+.git
+.github
+.vscode
+__pycache__
+*.pyc
+*.pyo
+logs/
+output/
+data/
+.env
+*.jpg
+*.jpeg
+!De_AI_Flavor.jpg
