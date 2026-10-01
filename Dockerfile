@@ -36,7 +36,8 @@ VOLUME ["/app/output", "/app/logs", "/app/knowledge", "/app/src/ai_write_x/confi
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -fsS http://127.0.0.1:8000/health || exit 1
+    CMD curl -fsS http://127.0.0.1:${PORT:-8000}/health || exit 1
 
 # 直接启动 FastAPI 服务（不需要 PyWebView 桌面壳）
-CMD ["uvicorn", "src.ai_write_x.web.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# 用 ${PORT:-8000} 兼容 Railway / Render 等 PaaS 平台注入的 PORT 环境变量
+CMD ["sh", "-c", "uvicorn src.ai_write_x.web.app:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
